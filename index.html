@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Generator Pro | Premium Edition</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --success: #34a853;
+            --warning: #fbbc04;
+            --danger: #ea4335;
+            --bg: #f8f9fa;
+            --text-main: #3c4043;
+            --card-bg: #ffffff;
+            --input-border: #dadce0;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main);
+            display: flex; 
+            justify-content: center; 
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            padding: 40px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 35px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1); 
+            width: 100%; 
+            max-width: 850px; 
+        }
+
+        h2 { 
+            text-align: center; 
+            color: var(--primary); 
+            font-weight: 700;
+            margin-bottom: 30px; 
+            font-size: 28px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-section { margin-bottom: 25px; }
+        
+        label { 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #5f6368; 
+            font-size: 14px;
+        }
+
+        /* 输入框样式优化 */
+        input { 
+            padding: 12px 16px; 
+            border: 1px solid var(--input-border); 
+            border-radius: 8px; 
+            font-size: 15px; 
+            outline: none; 
+            width: 100%; 
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+
+        input:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+        }
+
+        /* 动态行美化 */
+        .pair-row { 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+            margin-bottom: 12px; 
+            background: #fff; 
+            padding: 15px; 
+            border-radius: 10px; 
+            border: 1px solid #f1f3f4;
+            transition: transform 0.2s ease;
+        }
+        
+        .pair-row:hover {
+            border-color: #e8f0fe;
+            background: #fdfdfd;
+        }
+
+        .pair-row input { flex: 1; border-color: #e0e0e0; }
+
+        /* 按钮体系 */
+        button { 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button:active { transform: scale(0.96); }
+
+        .btn-add { 
+            background: #e8f0fe; 
+            color: var(--primary); 
+            padding: 10px 20px; 
+            font-size: 14px;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+        .btn-add:hover { background: #d2e3fc; }
+
+        .btn-remove { 
+            background: #fce8e6; 
+            color: var(--danger); 
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+        }
+        .btn-remove:hover { background: var(--danger); color: white; }
+
+        #btnChecker { 
+            background: var(--warning); 
+            color: #3c4043; 
+            padding: 6px 16px; 
+            border-radius: 20px; 
+            font-size: 13px; 
+            margin-top: 10px;
+        }
+
+        .hidden { display: none !important; }
+
+        /* 输出板块美化 */
+        .result-section { 
+            margin-top: 35px; 
+            border-top: 1px solid #eee; 
+            padding-top: 25px; 
+        }
+
+        .result-label { 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            margin-bottom: 12px; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .output-box { 
+            background: #202124; 
+            color: #bdc1c6; 
+            border-radius: 12px; 
+            padding: 20px; 
+            font-family: 'Consolas', 'Monaco', monospace; 
+            font-size: 13px; 
+            white-space: pre-wrap; 
+            word-break: break-all; 
+            line-height: 1.6;
+            margin-bottom: 15px;
+            border: 1px solid #3c4043;
+        }
+        
+        #testOutput { 
+            background: #e8f0fe; 
+            color: #174ea6; 
+            border: 1px solid #d2e3fc; 
+            font-weight: 500;
+        }
+
+        .btn-toolbar { display: flex; gap: 12px; justify-content: flex-end; }
+        
+        .action-btn { padding: 10px 24px; font-size: 14px; }
+        .btn-copy { background: var(--success); color: white; box-shadow: 0 4px 12px rgba(52,168,83,0.2); }
+        .btn-copy:hover { opacity: 0.9; box-shadow: 0 6px 16px rgba(52,168,83,0.3); }
+        
+        .btn-reset { background: #f1f3f4; color: #5f6368; }
+        .btn-reset:hover { background: #e8eaed; color: #202124; }
+
+        /* 动画提示 */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .pair-row { animation: fadeIn 0.3s ease-out; }
+
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🔗 Link Generator Pro</h2>
+    
+    <div class="form-section">
+        <label>📍 Project Details</label>
+        <input type="text" id="projectId" placeholder="Enter Project Number (e.g. ISE1234)" oninput="handleGlobalChange()">
+        <button id="btnChecker" class="hidden" onclick="openChecker()">🔍 Open Checker</button>
+    </div>
+
+    <div class="form-section">
+        <label>🌍 Market Configuration (Type to Search)</label>
+        <div id="pairsContainer">
+            <div class="pair-row">
+                <input type="text" class="country-input" list="countryData" placeholder="Select Country..." oninput="handleGlobalChange()">
+                <input type="text" class="lang-input" list="langData" placeholder="Select Language..." oninput="handleGlobalChange()">
+                <div style="width: 36px;"></div> 
+            </div>
+        </div>
+        <button class="btn-add" onclick="addNewPair()">➕ Add Another Market</button>
+    </div>
+
+    <datalist id="countryData"></datalist>
+    <datalist id="langData"></datalist>
+
+    <div class="result-section">
+        <span class="result-label">🧪 Internal Test Link</span>
+        <div id="testOutput" class="output-box">Waiting for Project ID...</div>
+        <div class="btn-toolbar">
+            <button class="action-btn btn-copy" style="background:#1a73e8" onclick="copyText('testOutput', this)">📋 Copy Test Link</button>
+        </div>
+    </div>
+
+    <div class="result-section">
+        <span class="result-label">🚀 Final Delivery Payload</span>
+        <div id="finalOutput" class="output-box">Waiting for configuration...</div>
+        <div class="btn-toolbar">
+            <button class="action-btn btn-copy" onclick="copyText('finalOutput', this)">⚡ Copy All Links</button>
+            <button class="action-btn btn-reset" onclick="resetAll()">🔄 Reset</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 数据配置 [保持原有数据不变]
+    const countryList = [
+        { code: "ARE", name: "ARE(United Arab Emirates)" }, { code: "ARG", name: "ARG(Argentina)" },
+        { code: "AUS", name: "AUS(Australia)" }, { code: "AUT", name: "AUT(Austria)" },
+        { code: "BEL", name: "BEL(Belgium)" }, { code: "BGD", name: "BGD(Bangladesh)" },
+        { code: "BGR", name: "BGR(Bulgaria)" }, { code: "BIH", name: "BIH(Bosnia and Herzegovina)" },
+        { code: "BOL", name: "BOL(Bolivia)" }, { code: "BRA", name: "BRA(Brazil)" },
+        { code: "CAN", name: "CAN(Canada)" }, { code: "CHE", name: "CHE(Switzerland)" },
+        { code: "CHL", name: "CHL(Chile)" }, { code: "CHN", name: "CHN(China)" },
+        { code: "CMR", name: "CMR(Cameroon)" }, { code: "COL", name: "COL(Colombia)" },
+        { code: "CRI", name: "CRI(Costa Rica)" }, { code: "CUB", name: "CUB(Cuba)" },
+        { code: "CYP", name: "CYP(Cyprus)" }, { code: "CZE", name: "CZE(Czech Republic)" },
+        { code: "DEU", name: "DEU(Germany)" }, { code: "DNK", name: "DNK(Denmark)" },
+        { code: "ECU", name: "ECU(Ecuador)" }, { code: "EGY", name: "EGY(Egypt)" },
+        { code: "ESP", name: "ESP(Spain)" }, { code: "FIN", name: "FIN(Finland)" },
+        { code: "FRA", name: "FRA(France)" }, { code: "GBR", name: "GBR(United Kingdom)" },
+        { code: "GRC", name: "GRC(Greece)" }, { code: "HKG", name: "HKG(Hong Kong)" },
+        { code: "HRV", name: "HRV(Croatia)" }, { code: "HUN", name: "HUN(Hungary)" },
+        { code: "IDN", name: "IDN(Indonesia)" }, { code: "IND", name: "IND(India)" },
+        { code: "IRL", name: "IRL(Ireland)" }, { code: "IRN", name: "IRN(Iran, Islamic Republic of)" },
+        { code: "IRQ", name: "IRQ(Iraq)" }, { code: "ISL", name: "ISL(Iceland)" },
+        { code: "ISR", name: "ISR(Israel)" }, { code: "ITA", name: "ITA(Italy)" },
+        { code: "JPN", name: "JPN(Japan)" }, { code: "KHM", name: "KHM(Cambodia)" },
+        { code: "KOR", name: "KOR(Korea, Republic of)" }, { code: "LAO", name: "LAO(Lao People's Democratic Republic)" },
+        { code: "LKA", name: "LKA(Sri Lanka)" }, { code: "LUX", name: "LUX(Luxembourg)" },
+        { code: "MAC", name: "MAC(Macao)" }, { code: "MAR", name: "MAR(Morocco)" },
+        { code: "MCO", name: "MCO(Monaco)" }, { code: "MDV", name: "MDV(Maldives)" },
+        { code: "MEX", name: "MEX(Mexico)" }, { code: "MMR", name: "MMR(Myanmar)" },
+        { code: "MNG", name: "MNG(Mongolia)" }, { code: "MYS", name: "MYS(Malaysia)" },
+        { code: "NGA", name: "NGA(Nigeria)" }, { code: "NLD", name: "NLD(Netherlands)" },
+        { code: "NOR", name: "NOR(Norway)" }, { code: "NPL", name: "NPL(Nepal)" },
+        { code: "NZL", name: "NZL(New Zealand)" }, { code: "PAK", name: "PAK(Pakistan)" },
+        { code: "PER", name: "PER(Peru)" }, { code: "PHL", name: "PHL(Philippines)" },
+        { code: "POL", name: "POL(Poland)" }, { code: "PRT", name: "PRT(Portugal)" },
+        { code: "PRY", name: "PRY(Paraguay)" }, { code: "QAT", name: "QAT(Qatar)" },
+        { code: "ROU", name: "ROU(Romania)" }, { code: "RUS", name: "RUS(Russian Federation)" },
+        { code: "SAU", name: "SAU(Saudi Arabia)" }, { code: "SEN", name: "SEN(Senegal)" },
+        { code: "SGP", name: "SGP(Singapore)" }, { code: "SRB", name: "SRB(Serbia)" },
+        { code: "SVK", name: "SVK(Slovakia)" }, { code: "SVN", name: "SVN(Slovenia)" },
+        { code: "SWE", name: "SWE(Sweden)" }, { code: "THA", name: "THA(Thailand)" },
+        { code: "TUN", name: "TUN(Tunisia)" }, { code: "TUR", name: "TUR(Turkey)" },
+        { code: "TWN", name: "TWN(Taiwan)" }, { code: "UKR", name: "UKR(Ukraine)" },
+        { code: "URY", name: "URY(Uruguay)" }, { code: "USA", name: "USA(United States)" },
+        { code: "VEN", name: "VEN(Venezuela)" }, { code: "VNM", name: "VNM(Viet Nam)" },
+        { code: "ZAF", name: "ZAF(South Africa)" }
+    ];
+
+    const langList = [
+        { code: "E", name: "E(English)" }, { code: "CHM", name: "CHM(Chinese Mordern)" },
+        { code: "CHT", name: "CHT(Chinse Traditional)" }, { code: "JP", name: "JP(Japanese)" },
+        { code: "KR", name: "KR(Korean)" }, { code: "BA", name: "BA(Malaysia)" },
+        { code: "ND", name: "ND(Indonesian)" }, { code: "TH", name: "TH(Thai)" },
+        { code: "VT", name: "VT(Vietnam)" }, { code: "DE", name: "DE(Germany)" },
+        { code: "FR", name: "FR(French)" }, { code: "PR", name: "PR(Portuguese)" },
+        { code: "IT", name: "IT(Italian)" }, { code: "PO", name: "PO(Polish)" },
+        { code: "SP", name: "SP(Spanish)" }, { code: "RU", name: "RU(Russian)" },
+        { code: "TU", name: "TU(Turkish)" }, { code: "HU", name: "HU(Hungary)" },
+        { code: "BU", name: "BU(Bulgarian)" }, { code: "RO", name: "RO(Romanian)" },
+        { code: "NL", name: "NL(Dutch)" }, { code: "DA", name: "DA(Danish)" },
+        { code: "CZ", name: "CZ(Czech)" }, { code: "SW", name: "SW(Swedish)" },
+        { code: "AR", name: "AR(Arabic)" }, { code: "HI", name: "HI(Hindi)" }
+    ];
+
+    // 初始化加载
+    window.onload = () => {
+        const cData = document.getElementById('countryData');
+        const lData = document.getElementById('langData');
+        countryList.forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = item.code;
+            opt.label = item.name;
+            cData.appendChild(opt);
+        });
+        langList.forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = item.code;
+            opt.label = item.name;
+            lData.appendChild(opt);
+        });
+    };
+
+    function addNewPair() {
+        const container = document.getElementById('pairsContainer');
+        const firstRow = container.querySelector('.pair-row');
+        const newRow = firstRow.cloneNode(true);
+        newRow.querySelector('.country-input').value = "";
+        newRow.querySelector('.lang-input').value = "";
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn-remove';
+        delBtn.innerHTML = '✕';
+        delBtn.onclick = function() { newRow.remove(); handleGlobalChange(); };
+        newRow.replaceChild(delBtn, newRow.lastElementChild);
+        container.appendChild(newRow);
+    }
+
+    function handleGlobalChange() {
+        const pid = document.getElementById('projectId').value.trim();
+        const checkerBtn = document.getElementById('btnChecker');
+        if (pid) {
+            checkerBtn.classList.remove('hidden');
+            document.getElementById('testOutput').innerText = `Test link:\nhttps://surveys.lifepointspanel.com/survey/apac/${pid}?panels=LFP&list=0`;
+        } else {
+            checkerBtn.classList.add('hidden');
+            document.getElementById('testOutput').innerText = "Waiting for Project ID...";
+        }
+
+        const rows = document.querySelectorAll('.pair-row');
+        let liveLinks = [], ppgLinks = [], validCount = 0;
+        rows.forEach(row => {
+            const c = row.querySelector('.country-input').value.trim().toUpperCase();
+            const l = row.querySelector('.lang-input').value.trim().toUpperCase();
+            if (pid && c && l) {
+                validCount++;
+                const prefix = rows.length > 1 ? `${c}: ` : "";
+                liveLinks.push(`${prefix}https://surveys.lifepointspanel.com/survey/apac/${pid}?panels=LFP&list=80001&countryCode=${c}&lang=${l}&ID=[ID]`);
+                ppgLinks.push(`${prefix}https://surveys.lifepointspanel.com/survey/apac/${pid}?list=ppg&rid=[ID]&countryCode=${c}&lang=${l}&panels=PPG`);
+            }
+        });
+
+        const outputDiv = document.getElementById('finalOutput');
+        if (validCount > 0) {
+            const note = `NOTE to Sampler: Please choose S2S secure option. The "t" variable is created automatically by ISE you do not need to include it. "rid" is the respondent identifier and needs to be added manually. "list" must be set to "ppg"`;
+            outputDiv.innerText = `Live Link:\n${liveLinks.join('\n')}\n\nPPG live link:\n${ppgLinks.join('\n')}\n\n${note}`;
+            outputDiv.style.color = "#bdc1c6";
+        } else {
+            outputDiv.innerText = "Waiting for configuration...";
+            outputDiv.style.color = "#5f6368";
+        }
+    }
+
+    function openChecker() {
+        const pid = document.getElementById('projectId').value.trim();
+        window.open(`https://surveys.lifepointspanel.com/survey/lib/local/surveychecker/v2364?checkPath=apac/${pid}`, '_blank');
+    }
+
+    function copyText(id, btn) {
+        const text = document.getElementById(id).innerText;
+        if (text.includes("Waiting")) return;
+        navigator.clipboard.writeText(text).then(() => {
+            const original = btn.innerHTML;
+            btn.innerHTML = "✅ Success!";
+            btn.style.background = "#0d652d";
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.style.background = "";
+            }, 1500);
+        });
+    }
+
+    function resetAll() {
+        const container = document.getElementById('pairsContainer');
+        while(container.children.length > 1) container.removeChild(container.lastChild);
+        document.getElementById('projectId').value = "";
+        container.querySelector('.country-input').value = "";
+        container.querySelector('.lang-input').value = "";
+        handleGlobalChange();
+    }
+</script>
+
+</body>
+</html>
