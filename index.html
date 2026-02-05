@@ -56,7 +56,6 @@
             font-size: 14px;
         }
 
-        /* 输入框样式优化 */
         input { 
             padding: 12px 16px; 
             border: 1px solid var(--input-border); 
@@ -74,7 +73,6 @@
             box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
         }
 
-        /* 动态行美化 */
         .pair-row { 
             display: flex; 
             gap: 12px; 
@@ -94,7 +92,6 @@
 
         .pair-row input { flex: 1; border-color: #e0e0e0; }
 
-        /* 按钮体系 */
         button { 
             border: none; 
             border-radius: 8px; 
@@ -139,7 +136,6 @@
 
         .hidden { display: none !important; }
 
-        /* 输出板块美化 */
         .result-section { 
             margin-top: 35px; 
             border-top: 1px solid #eee; 
@@ -186,7 +182,6 @@
         .btn-reset { background: #f1f3f4; color: #5f6368; }
         .btn-reset:hover { background: #e8eaed; color: #202124; }
 
-        /* 动画提示 */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .pair-row { animation: fadeIn 0.3s ease-out; }
 
@@ -207,8 +202,8 @@
         <label>🌍 Market Configuration (Type to Search)</label>
         <div id="pairsContainer">
             <div class="pair-row">
-                <input type="text" class="country-input" list="countryData" placeholder="Select Country..." oninput="handleGlobalChange()">
-                <input type="text" class="lang-input" list="langData" placeholder="Select Language..." oninput="handleGlobalChange()">
+                <input type="text" class="country-input" list="countryData" placeholder="Select Country..." oninput="handleGlobalChange()" onchange="validateCode(this)">
+                <input type="text" class="lang-input" list="langData" placeholder="Select Language..." oninput="handleGlobalChange()" onchange="validateCode(this)">
                 <div style="width: 36px;"></div> 
             </div>
         </div>
@@ -237,7 +232,7 @@
 </div>
 
 <script>
-    // 数据配置 [保持原有数据不变]
+    // 数据配置
     const countryList = [
         { code: "ARE", name: "ARE(United Arab Emirates)" }, { code: "ARG", name: "ARG(Argentina)" },
         { code: "AUS", name: "AUS(Australia)" }, { code: "AUT", name: "AUT(Austria)" },
@@ -300,7 +295,6 @@
         { code: "AR", name: "AR(Arabic)" }, { code: "HI", name: "HI(Hindi)" }
     ];
 
-    // 初始化加载
     window.onload = () => {
         const cData = document.getElementById('countryData');
         const lData = document.getElementById('langData');
@@ -317,6 +311,26 @@
             lData.appendChild(opt);
         });
     };
+
+    /**
+     * 更新后的校验函数
+     */
+    function validateCode(input) {
+        const isCountry = input.classList.contains('country-input');
+        const list = isCountry ? countryList : langList;
+        const val = input.value.trim().toUpperCase();
+        
+        if (val === "") return;
+        
+        // 查找是否存在匹配的 Code
+        const exists = list.some(item => item.code === val);
+        if (exists) {
+            input.value = val; // <--- 关键修改：匹配成功强制转大写显示
+        } else {
+            input.value = ""; // 不匹配则清空
+        }
+        handleGlobalChange();
+    }
 
     function addNewPair() {
         const container = document.getElementById('pairsContainer');
@@ -345,10 +359,15 @@
 
         const rows = document.querySelectorAll('.pair-row');
         let liveLinks = [], ppgLinks = [], validCount = 0;
+        
         rows.forEach(row => {
             const c = row.querySelector('.country-input').value.trim().toUpperCase();
             const l = row.querySelector('.lang-input').value.trim().toUpperCase();
-            if (pid && c && l) {
+            
+            const isCountryValid = countryList.some(item => item.code === c);
+            const isLangValid = langList.some(item => item.code === l);
+
+            if (pid && isCountryValid && isLangValid) {
                 validCount++;
                 const prefix = rows.length > 1 ? `${c}: ` : "";
                 liveLinks.push(`${prefix}https://surveys.lifepointspanel.com/survey/apac/${pid}?panels=LFP&list=80001&countryCode=${c}&lang=${l}&ID=[ID]`);
