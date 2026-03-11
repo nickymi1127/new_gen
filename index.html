@@ -372,7 +372,7 @@
         let url = "";
         switch(type) {
             case 'checker': url = `https://surveys.lifepointspanel.com/survey/lib/local/surveychecker/v23642?checkPath=apac/${pid}`; break;
-            case 'test': url = `https://surveys.lifepointspanel.com/survey/apac/${pid}`; break;
+            case 'test': url = `https://surveys.lifepointspanel.com/survey/apac/${pid}?panels=LFP&list=0`; break;
             case 'summary': url = `https://surveys.lifepointspanel.com/rep/apac/${pid}:dashboard`; break;
             case 'quota': url = `https://surveys.lifepointspanel.com/rep/apac/${pid}:dashboard?tab=quota&split=none`; break;
             case 'report': url = `https://surveys.lifepointspanel.com/report/apac/${pid}`; break;
@@ -405,3 +405,4 @@
 </body>
 
 </html>
+
