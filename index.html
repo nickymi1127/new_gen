@@ -15,6 +15,7 @@
             --text-main: #3c4043;
             --card-bg: #ffffff;
             --input-border: #dadce0;
+            --test: #FF69B4;
         }
 
         body { 
@@ -113,6 +114,7 @@
 
         .tool-btn { padding: 6px 14px; border-radius: 20px; font-size: 12px; color: white; }
         .btn-checker { background: var(--warning); color: #3c4043; }
+        .btn-test { background: var(--test); }
         .btn-summary { background: var(--primary); }
         .btn-quota { background: var(--info); }
         .btn-report { background: var(--success); }
@@ -152,6 +154,7 @@
         
         <div id="toolButtons" class="btn-group hidden">
             <button class="tool-btn btn-checker" onclick="openUrl('checker')">🔍 Checker</button>
+            <button class="tool-btn btn-test" onclick="openUrl('test')">🧪 Test</button>
             <button class="tool-btn btn-summary" onclick="openUrl('summary')">📊 Summary</button>
             <button class="tool-btn btn-quota" onclick="openUrl('quota')">🎯 Quota</button>
             <button class="tool-btn btn-report" onclick="openUrl('report')">📝 Report</button>
@@ -369,6 +372,7 @@
         let url = "";
         switch(type) {
             case 'checker': url = `https://surveys.lifepointspanel.com/survey/lib/local/surveychecker/v23642?checkPath=apac/${pid}`; break;
+            case 'test': url = `https://surveys.lifepointspanel.com/survey/apac/${pid}`; break;
             case 'summary': url = `https://surveys.lifepointspanel.com/rep/apac/${pid}:dashboard`; break;
             case 'quota': url = `https://surveys.lifepointspanel.com/rep/apac/${pid}:dashboard?tab=quota&split=none`; break;
             case 'report': url = `https://surveys.lifepointspanel.com/report/apac/${pid}`; break;
